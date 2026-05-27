@@ -1,0 +1,34 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual environment
+model-eval-env/
+.env
+
+# Logs
+logs/*.log
+
+# Generated reports
+reports/json/*.json
+reports/markdown/*.md
+
+# Keep folder structure
+!reports/json/.gitkeep
+!reports/markdown/.gitkeep
+!logs/.gitkeep
+
+# Testing and cache
+.pytest_cache/
+.coverage
+htmlcov/
+
+# IDE
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db
