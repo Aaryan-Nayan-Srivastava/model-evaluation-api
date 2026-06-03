@@ -1,0 +1,10 @@
+# Phase 2 — Schema Design
+
+## Tasks Completed
+- Created `metrics_schema.py` — TaskType enum, ClassificationMetrics, RegressionMetrics, and `validate_metrics_by_task()` helper
+- Created `request_schema.py` — TrainingLogEntry, ExperimentMetadata, EvaluationRequest (with task-aware metric validation), and DataEvaluationMetadata
+- Created `report_schema.py` — EvaluationSource, RiskLevel, ReportMetadata, ReportContent, and EvaluationReport
+- Created `response_schema.py` — ResponseStatus, EvaluationResponse, and ErrorResponse
+- All schemas are synchronous Pydantic models (no async needed — pure validation logic)
+- Local commit
+- Pushed phase 2 to github
