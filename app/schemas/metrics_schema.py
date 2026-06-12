@@ -1,10 +1,10 @@
-from enum import enum
+from enum import Enum
 from pydantic import BaseModel, Field, model_validator
 from typing import Optional
 
 
 
-class task_type(str,enum):
+class task_type(str,Enum):
     classification = "classification"
     regression = "regression"
 

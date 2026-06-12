@@ -5,6 +5,7 @@ from app.config import settings
 from app.utils.logger import get_logger
 
 from app.routes import health
+from app.routes import evaluate
 
 logger = get_logger(__name__)
 
@@ -23,6 +24,7 @@ app = FastAPI(
 )
 
 app.include_router(health.router)
+app.include_router(evaluate.router)
 
 @app.get("/")
 async def root():
@@ -30,5 +32,6 @@ async def root():
     return {
         "message": "Welcome to Model Evaluation Reporter API",
         "docs": "/docs",
-        "health": "/health"
+        "health": "/health",
+        "evaluate": "/evaluate"
     }
