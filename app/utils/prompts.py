@@ -25,19 +25,17 @@ Processed Metrics:
 Experiment Metadata:
 {experiment_metadata}
 
-Your task is to generate a structured model evaluation report.
+Return the evaluation using the required structured format.
 
-The report must include:
-1. Performance Summary
-2. Risk Assessment
-3. Deployment Readiness
-4. Recommendations
+Format Instructions:
+{format_instructions}
 
 Important rules:
 - Do not assume metrics that are not present.
 - Clearly mention missing important metrics.
 - Base your judgment only on the provided metrics and metadata.
 - Keep the explanation practical for ML deployment decisions.
+- Recommendations must be specific and actionable.
 """.strip()
 )
 
@@ -55,8 +53,15 @@ def convert_to_serializable_dict(data: Any) -> dict[str, Any]:
     return {"value": str(data)}
 
 
-def build_evaluation_prompt(model_name: str,task_type: TaskType,processed_metrics: dict[str, Any],experiment_metadata: Any | None = None,) -> str:
-    
+def build_evaluation_prompt(
+    model_name: str,
+    task_type: TaskType,
+    processed_metrics: dict[str, Any],
+    experiment_metadata: Any | None = None,
+    format_instructions: str = ""
+) -> str:
+
+
     metadata_dict = convert_to_serializable_dict(experiment_metadata)
 
     prompt = evaluation_prompt.format(
@@ -64,6 +69,7 @@ def build_evaluation_prompt(model_name: str,task_type: TaskType,processed_metric
         task_type=task_type.value,
         processed_metrics=json.dumps(processed_metrics, indent=2),
         experiment_metadata=json.dumps(metadata_dict, indent=2),
+        format_instructions=format_instructions,
     )
 
     return prompt
