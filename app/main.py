@@ -25,6 +25,7 @@ app = FastAPI(
 
 app.include_router(health.router)
 app.include_router(evaluate.router)
+# app.include_router(evaluate_from_data.router)
 
 @app.get("/")
 async def root():
@@ -33,5 +34,6 @@ async def root():
         "message": "Welcome to Model Evaluation Reporter API",
         "docs": "/docs",
         "health": "/health",
-        "evaluate": "/evaluate"
+        "evaluate": "/evaluate",
+        "evaluate_from_data": "/evaluate-from-data"
     }
