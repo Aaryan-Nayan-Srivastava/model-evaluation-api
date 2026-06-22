@@ -1,6 +1,7 @@
 import pandas as pd
 
 from fastapi import APIRouter, HTTPException
+from app.schemas.metrics_schema import task_type
 from app.services.model_service import load_uploaded_model
 from app.utils.logger import get_logger
 from app.schemas.request_schema import evaluationRequest
@@ -66,28 +67,32 @@ async def evaluate_from_data(
         prediction_Result=run_prediction_and_metric_calculation(model,x_test,y_test,metadata_dict["task_type"])
     except Exception as exc:
         raise HTTPException(
-            status_code=500,
+            status_code=400,
             detail=f"Prediction and metric calculation failed: {str(exc)}",
         )
-    metrics_text = ", ".join(
-        f"{metric_name}: {metric_value:.4f}"
-        for metric_name, metric_value in prediction_Result.metrics.items()
-    )
+    internal_request = evaluationRequest(
+            task_type=metadata_dict['task_type'],
+            model_name=metadata_dict['model_name'],
+            metrics=prediction_Result.metrics,
+            experiment_metadata={
+                "task_type": metadata_dict['task_type'],
+                "target_column": metadata_dict['target_column'],
+                "model_name": metadata_dict['model_name'],
+                "framework": metadata_dict['framework'],
+                "notes": (
+                    "Metrics were calculated internally from uploaded model "
+                    "and dataset files."
+                ),
+            },
+        )
+    
+    try:
+        evaluation_response = await evaluate_from_metrics(internal_request, evaluationSource.data)
+        logger.info(f"Evaluation completed successfully for model: {internal_request.model_name}")
+        return evaluation_response
+    except Exception as e:
+        logger.error(f"Error during evaluation for model: {internal_request.model_name} - {str(e)}")
+        raise HTTPException(status_code=500, detail="An error occurred during evaluation. Please check the input data and try again.")
 
-    model_class_name = metadata_dict["model_name"]
 
-    return EvaluationResponse(
-        message="Predictions generated and metrics calculated successfully.",
-        report_id="not_generated_yet",
-        evaluation_source=evaluationSource.data,
-        model_name=metadata_dict["model_name"],
-        task_type=metadata_dict["task_type"],
-        summary=(
-            f"Generated {prediction_Result.prediction_count} prediction(s) using "
-            f"model file '{model_file.filename}' and test dataset file '{test_dataset_file.filename}'. "
-            f"Calculated metrics: {metrics_text}. "
-            "LLM evaluation will be connected in the next phase."
-        ),
-        risk_level="Not assessed yet",
-        deployment_readiness="Not assessed yet",
-    )
+

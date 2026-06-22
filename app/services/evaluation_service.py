@@ -9,11 +9,12 @@ from app.services.metrics_service import preprocess_metrics
 from app.services.report_service import generate_evaluation_report
 from app.utils.prompts import build_evaluation_prompt
 from app.utils.logger import get_logger
+from app.schemas.report_schema import evaluationReport
 logger = get_logger(__name__)
 
 
 
-async def evaluate_from_metrics(request: evaluationRequest) -> EvaluationResponse:
+async def evaluate_from_metrics(request: evaluationRequest, evaluation_source: evaluationSource=evaluationSource.metrics) -> EvaluationResponse:
 
     try:
         processed_metrics = preprocess_metrics(
@@ -37,7 +38,7 @@ async def evaluate_from_metrics(request: evaluationRequest) -> EvaluationRespons
             request=request,
             processed_metrics=processed_metrics,
             llm_output=llm_output,
-            evaluation_source=evaluationSource.metrics,
+            evaluation_source=evaluation_source,
         )
 
         recommendations_text = " ".join(
