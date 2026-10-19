@@ -7,7 +7,7 @@ import os
 load_dotenv()
 def get_llm()->ChatGroq:
     api_key = os.getenv("GROQ_API_KEY")
-    model_name = os.getenv("GROQ_MODEL_NAME", "llama-3.1-8b-instant")
+    model_name = os.getenv("GROQ_MODEL_NAME", "openai/gpt-oss-20b")
     if api_key is None:
         raise ValueError("GROQ_API_KEY environment variable is not set.")
     
