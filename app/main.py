@@ -1,6 +1,7 @@
 from contextlib import asynccontextmanager
 from pathlib import Path
 from fastapi import FastAPI
+from fastapi.staticfiles import StaticFiles
 from app.config import settings
 from app.utils.logger import get_logger
 
@@ -27,6 +28,9 @@ app.include_router(health.router)
 app.include_router(evaluate.router)
 # app.include_router(evaluate_from_data.router)
 
+frontend_dir = Path(__file__).resolve().parent.parent / "frontend"
+app.mount("/ui", StaticFiles(directory=frontend_dir, html=True), name="frontend")
+
 @app.get("/")
 async def root():
     logger.info("Root endpoint called")
@@ -35,5 +39,6 @@ async def root():
         "docs": "/docs",
         "health": "/health",
         "evaluate": "/evaluate",
-        "evaluate_from_data": "/evaluate-from-data"
+        "evaluate_from_data": "/evaluate-from-data",
+        "frontend": "/ui/"
     }

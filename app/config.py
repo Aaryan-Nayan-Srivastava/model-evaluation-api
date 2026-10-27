@@ -14,7 +14,7 @@ class Settings:
     REPORT_JSON_DIR: str = os.getenv("REPORT_JSON_DIR", "reports/json")
     REPORT_MARKDOWN_DIR: str = os.getenv("REPORT_MARKDOWN_DIR", "reports/markdown")
 
-    GROQ_MODEL_NAME: str = os.getenv("GROQ_MODEL_NAME", "llama-3.1-8b-instant")
+    GROQ_MODEL_NAME: str = os.getenv("GROQ_MODEL_NAME", "openai/gpt-oss-20b")
 
 
 settings = Settings()
